@@ -431,7 +431,7 @@ public class AluService implements NbiService {
 //				}
 //			}
 			NameAndStringValue_T[] subnetDnSdh = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "SDH");
-			NameAndStringValue_T[] subnetDnOtn = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "OTN");
+			NameAndStringValue_T[] subnetDnOtn = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "PTN");
 			TopologicalLink_T[] vendorSectionListSdh = SubnetworkMgrHandler.instance().retrieveAllTopologicalLinks(
 					corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetDnSdh, errorlog);
 			TopologicalLink_T[] vendorSectionListOtn = SubnetworkMgrHandler.instance().retrieveAllTopologicalLinks(
@@ -556,7 +556,8 @@ public class AluService implements NbiService {
 		List<SubnetworkConnection> sncList = new ArrayList<SubnetworkConnection>();
 		List<SubnetworkConnection_T> snclist = new ArrayList<SubnetworkConnection_T>();
 //		SubnetworkConnection_T[] sncs = null;
-		SubnetworkConnection_T[] otnSncs = null;
+		SubnetworkConnection_T[] sdhSncs = null;
+		SubnetworkConnection_T[] ptnSncs = null;
 		try {
 			// NameAndStringValue_T[][] subs = EMSMgrHandler.instance().retrieveAllTopLevelSubnetworkNames(corbaService.getNmsSession().getEmsMgr());
 //			MultiLayerSubnetwork_T[] subs = EMSMgrHandler.instance().retrieveAllTopLevelSubnetworks(corbaService.getNmsSession().getEmsMgr());
@@ -571,24 +572,37 @@ public class AluService implements NbiService {
 //					errorlog.error("retrieveAllSNCs CORBA.SystemException: " + e.getMessage(), e);
 //				}
 //			}
-			NameAndStringValue_T[] subnetworkNameOtn = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "OTN");
-			for (NameAndStringValue_T subnetworkNameOtn1 : subnetworkNameOtn) {
-				sbilog.info("retrieveAllOtnSNCs name: " + subnetworkNameOtn1.name);
-				sbilog.info("retrieveAllOtnSNCs value: " + subnetworkNameOtn1.value);
+			NameAndStringValue_T[] subnetworkNameSdh = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "SDH");
+			for (NameAndStringValue_T subnetworkNameSdh1 : subnetworkNameSdh) {
+				sbilog.info("retrieveAllSdhSNCs name: " + subnetworkNameSdh1.name);
+				sbilog.info("retrieveAllSdhSNCs value: " + subnetworkNameSdh1.value);
 			}
-			sbilog.info("retrieveAllOtnSNCs : " + subnetworkNameOtn.toString());
-			otnSncs = SubnetworkMgrHandler.instance().retrieveAllSNCs(corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetworkNameOtn, new short[0]);
-			if (null != otnSncs) {
-				snclist.addAll(Arrays.asList(otnSncs));
+			sdhSncs = SubnetworkMgrHandler.instance().retrieveAllSNCs(corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetworkNameSdh, new short[0]);
+			if (null != sdhSncs) {
+				snclist.addAll(Arrays.asList(sdhSncs));
 			} else {
-				sbilog.info("retrieveAllOtnSNCs size = 0");
+				sbilog.info("retrieveAllSdhSNCs size = 0");
 			}
+			
+			NameAndStringValue_T[] subnetworkNamePtn = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "PTN");
+			for (NameAndStringValue_T subnetworkNamePtn1 : subnetworkNamePtn) {
+				sbilog.info("retrieveAllPtnSNCs name: " + subnetworkNamePtn1.name);
+				sbilog.info("retrieveAllPtnSNCs value: " + subnetworkNamePtn1.value);
+			}
+			ptnSncs = SubnetworkMgrHandler.instance().retrieveAllSNCs(corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetworkNamePtn, new short[0]);
+			if (null != ptnSncs) {
+				snclist.addAll(Arrays.asList(ptnSncs));
+			} else {
+				sbilog.info("retrieveAllPtnSNCs size = 0");
+			}
+			
 		} catch (ProcessingFailureException e) {
 			errorlog.error("retrieveAllSNCs ProcessingFailureException: " + CodeTool.isoToGbk(e.errorReason), e);
 		} catch (org.omg.CORBA.SystemException e) {
 			errorlog.error("retrieveAllSNCs CORBA.SystemException: " + e.getMessage(), e);
 		}
-		sbilog.info("retrieveAllOtnSNCs : size-" + otnSncs==null?0:otnSncs.length);
+		sbilog.info("retrieveAllSdhSNCs : size-" + sdhSncs==null?0:sdhSncs.length);
+		sbilog.info("retrieveAllPtnSNCs : size-" + sdhSncs==null?0:ptnSncs.length);
 //		sbilog.info("retrieveAllOtnSNCs : " + otnSncs.length);
 		// for (int i = 0; i < sncs.length; i++) {
 		// sbilog.debug("The " + i + " snc: " + sncs[i]);
