@@ -36,7 +36,7 @@ public class DayMigrationJob4SDH  extends MigrateCommonJob implements CommandBea
 
     private FileLogger nbilog = null;
     private String name = "";
-    private String emstype = "OTN";
+    private String emstype = "SDH";
     private SqliteConn sqliteConn = null;
 
     @Override

@@ -31,6 +31,7 @@ import org.asb.mule.probe.ptn.alu.nbi.task.SectionDataTask;
 import org.asb.mule.probe.ptn.alu.service.AluService;
 import org.quartz.JobExecutionContext;
 
+import com.alcatelsbell.cdcp.domain.SummaryUtil;
 import com.alcatelsbell.cdcp.nodefx.FtpInfo;
 import com.alcatelsbell.cdcp.nodefx.FtpUtil;
 import com.alcatelsbell.cdcp.nodefx.MessageUtil;
@@ -46,6 +47,7 @@ public class DayMigrationJob extends MigrateCommonJob implements CommandBean {
 	@Override
 	public void execute(JobExecutionContext arg0) {
 		// nbilog = new FileLogger(service.getEmsName() + "/nbi.log");
+		Date startTime = new Date();
 		nbilog = ((AluService) service).getCorbaService().getNbilog();
 		if (!service.getConnectState()) {
 			nbilog.error(">>>EMS is disconnect.");
@@ -151,7 +153,9 @@ public class DayMigrationJob extends MigrateCommonJob implements CommandBean {
 			FtpInfo ftpInfo = FtpUtil.uploadFile("PTN", "ALU",
 					service.getEmsName().contains("/") ? service.getEmsName().replace("/", "-") : service.getEmsName(), new File(dbName));
 
-			EDS_PTN eds = geyEDS(dbName);
+//			EDS_PTN eds = geyEDS(dbName);
+			EDS_PTN eds = SummaryUtil.geyEDS(serial, sqliteConn, service.getEmsName(), dbName);
+			eds.setStartTime(startTime);
 			MessageUtil.sendSBIFinishMessage(ftpInfo, serial, eds);
 		} catch (Exception e) {
 			nbilog.error("DayMigrationJob.ftp Exception:", e);

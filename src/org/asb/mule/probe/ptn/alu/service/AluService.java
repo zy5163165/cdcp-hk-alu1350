@@ -638,7 +638,8 @@ public class AluService implements NbiService {
 		topologicalLink.TopologicalLinkList_THolder topologicalLinkList = new topologicalLink.TopologicalLinkList_THolder();
 		NameAndStringValue_T[] vendorSncName = VendorDNFactory.createCommonDN(sncName);
 		try {
-			corbaService.getNmsSession().getMultiLayerSubnetworkMgr().getRouteAndTopologicalLinks(vendorSncName, normalRoute, topologicalLinkList);
+//			corbaService.getNmsSession().getMultiLayerSubnetworkMgr().getRouteAndTopologicalLinks(vendorSncName, normalRoute, topologicalLinkList);
+			corbaService.getNmsSession().getMultiLayerSubnetworkMgr().getRoute(vendorSncName, false, normalRoute);
 		} catch (ProcessingFailureException e) {
 			errorlog.error(sncName + " retrieveRouteAndTopologicalLinks ProcessingFailureException: " + CodeTool.isoToGbk(e.errorReason), e);
 		} catch (org.omg.CORBA.SystemException e) {
