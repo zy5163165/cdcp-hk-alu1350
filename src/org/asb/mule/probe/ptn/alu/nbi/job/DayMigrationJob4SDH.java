@@ -56,6 +56,7 @@ public class DayMigrationJob4SDH  extends MigrateCommonJob implements CommandBea
         }
         nbilog.info("Start for task : " + serial);
         nbilog.info("Start to migrate all data from ems: " + service.getEmsName());
+        nbilog.info("emstype : " + emstype);
         // name = "";// set empty to create new db instance
         try {
             // 0. set new db for new task.
