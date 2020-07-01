@@ -8,8 +8,6 @@ import com.alcatelsbell.cdcp.nodefx.NodeContext;
 import com.alcatelsbell.nms.db.components.service.JPASupport;
 import com.alcatelsbell.nms.db.components.service.JPAUtil;
 import com.alcatelsbell.nms.valueobject.BObject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.asb.mule.probe.framework.CommandBean;
 import org.asb.mule.probe.framework.entity.EDS_PTN;
@@ -54,6 +52,7 @@ public class DayMigrationJob4SDH  extends MigrateCommonJob implements CommandBea
             }
             return;
         }
+        nbilog.info("DayMigrationJob4SDH Start...");
         nbilog.info("Start for task : " + serial);
         nbilog.info("Start to migrate all data from ems: " + service.getEmsName());
         nbilog.info("emstype : " + emstype);
@@ -93,12 +92,8 @@ public class DayMigrationJob4SDH  extends MigrateCommonJob implements CommandBea
             SectionDataTask sectionTask = new SectionDataTask(sqliteConn);
             sectionTask.CreateTask(service, getJobName(), null, nbilog);
             sectionTask.excute();
-
-            nbilog.info("FlowDomainFragmentDataTask: ");
-            FlowDomainFragmentDataTask ffdrTask = new FlowDomainFragmentDataTask(sqliteConn);
-            ffdrTask.CreateTask(service, getJobName(), null, nbilog);
-            ffdrTask.excute();
-
+            
+            // SDH/OTN
             nbilog.info("SNCDataTask: ");
             SNCDataTask ttTask = new SNCDataTask(sqliteConn);
             ttTask.CreateTask(service, getJobName(), null, nbilog);
@@ -126,6 +121,13 @@ public class DayMigrationJob4SDH  extends MigrateCommonJob implements CommandBea
             executor2.waitingForAllFinish();
             nbilog.info("SNCAndCCAndSectionDataTask: waitingForInsertBObject.");
             sqliteConn.waitingForInsertBObject();
+            
+            // PTN
+
+            nbilog.info("FlowDomainFragmentDataTask: ");
+            FlowDomainFragmentDataTask ffdrTask = new FlowDomainFragmentDataTask(sqliteConn);
+            ffdrTask.CreateTask(service, getJobName(), null, nbilog);
+            ffdrTask.excute();
 
             nbilog.info("ProtectionGroupDataTask: ");
             ProtectionGroupDataTask pgTask = new ProtectionGroupDataTask(sqliteConn);
