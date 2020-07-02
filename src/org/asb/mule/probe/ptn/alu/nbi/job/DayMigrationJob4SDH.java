@@ -122,17 +122,16 @@ public class DayMigrationJob4SDH  extends MigrateCommonJob implements CommandBea
             nbilog.info("SNCAndCCAndSectionDataTask: waitingForInsertBObject.");
             sqliteConn.waitingForInsertBObject();
             
-            // PTN
-
-            nbilog.info("FlowDomainFragmentDataTask: ");
-            FlowDomainFragmentDataTask ffdrTask = new FlowDomainFragmentDataTask(sqliteConn);
-            ffdrTask.CreateTask(service, getJobName(), null, nbilog);
-            ffdrTask.excute();
-
-            nbilog.info("ProtectionGroupDataTask: ");
-            ProtectionGroupDataTask pgTask = new ProtectionGroupDataTask(sqliteConn);
-            pgTask.CreateTask(service, getJobName(), null, nbilog);
-            pgTask.excute();
+            // PTN先不处理
+//            nbilog.info("FlowDomainFragmentDataTask: ");
+//            FlowDomainFragmentDataTask ffdrTask = new FlowDomainFragmentDataTask(sqliteConn);
+//            ffdrTask.CreateTask(service, getJobName(), null, nbilog);
+//            ffdrTask.excute();
+//
+//            nbilog.info("ProtectionGroupDataTask: ");
+//            ProtectionGroupDataTask pgTask = new ProtectionGroupDataTask(sqliteConn);
+//            pgTask.CreateTask(service, getJobName(), null, nbilog);
+//            pgTask.excute();
 
             neList.clear();
             ttVector.clear();

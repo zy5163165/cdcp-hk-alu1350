@@ -431,13 +431,23 @@ public class AluService implements NbiService {
 //				}
 //			}
 			NameAndStringValue_T[] subnetDnSdh = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "SDH");
-			NameAndStringValue_T[] subnetDnOtn = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "PTN");
+			NameAndStringValue_T[] subnetDnPtn = VendorDNFactory.createSubnetworkDN(corbaService.getEmsDn(), "PTN");
 			TopologicalLink_T[] vendorSectionListSdh = SubnetworkMgrHandler.instance().retrieveAllTopologicalLinks(
 					corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetDnSdh, errorlog);
-			TopologicalLink_T[] vendorSectionListOtn = SubnetworkMgrHandler.instance().retrieveAllTopologicalLinks(
-					corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetDnOtn, errorlog);
+			TopologicalLink_T[] vendorSectionListPtn = SubnetworkMgrHandler.instance().retrieveAllTopologicalLinks(
+					corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetDnPtn, errorlog);
+			if (vendorSectionListSdh != null) {
+				sbilog.info("retrieveAllSections : vendorSectionListSdh=" + vendorSectionListSdh.length);
+			} else {
+				sbilog.info("retrieveAllSections : vendorSectionListSdh=null");
+			}
+			if (vendorSectionListPtn != null) {
+				sbilog.info("retrieveAllSections : vendorSectionListPtn=" + vendorSectionListPtn.length);
+			} else {
+				sbilog.info("retrieveAllSections : vendorSectionListPtn=null");
+			}
 			sections.addAll(Arrays.asList(vendorSectionListSdh));
-			sections.addAll(Arrays.asList(vendorSectionListOtn));
+//			sections.addAll(Arrays.asList(vendorSectionListPtn));
 		} catch (ProcessingFailureException e) {
 			errorlog.error("retrieveAllSections ProcessingFailureException: " + CodeTool.isoToGbk(e.errorReason), e);
 		} catch (org.omg.CORBA.SystemException e) {
@@ -579,6 +589,7 @@ public class AluService implements NbiService {
 			}
 			sdhSncs = SubnetworkMgrHandler.instance().retrieveAllSNCs(corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetworkNameSdh, new short[0]);
 			if (null != sdhSncs) {
+				sbilog.info("retrieveAllSdhSNCs size = " + sdhSncs.length);
 				snclist.addAll(Arrays.asList(sdhSncs));
 			} else {
 				sbilog.info("retrieveAllSdhSNCs size = 0");
@@ -591,7 +602,8 @@ public class AluService implements NbiService {
 			}
 			ptnSncs = SubnetworkMgrHandler.instance().retrieveAllSNCs(corbaService.getNmsSession().getMultiLayerSubnetworkMgr(), subnetworkNamePtn, new short[0]);
 			if (null != ptnSncs) {
-				snclist.addAll(Arrays.asList(ptnSncs));
+				sbilog.info("retrieveAllPtnSNCs size = " + ptnSncs.length);
+//				snclist.addAll(Arrays.asList(ptnSncs));
 			} else {
 				sbilog.info("retrieveAllPtnSNCs size = 0");
 			}
@@ -601,12 +613,8 @@ public class AluService implements NbiService {
 		} catch (org.omg.CORBA.SystemException e) {
 			errorlog.error("retrieveAllSNCs CORBA.SystemException: " + e.getMessage(), e);
 		}
-		sbilog.info("retrieveAllSdhSNCs : size-" + sdhSncs==null?0:sdhSncs.length);
-		sbilog.info("retrieveAllPtnSNCs : size-" + sdhSncs==null?0:ptnSncs.length);
-//		sbilog.info("retrieveAllOtnSNCs : " + otnSncs.length);
-		// for (int i = 0; i < sncs.length; i++) {
-		// sbilog.debug("The " + i + " snc: " + sncs[i]);
-		// }
+//		sbilog.info("retrieveAllSdhSNCs : size-" + sdhSncs==null?0:sdhSncs.length);
+//		sbilog.info("retrieveAllPtnSNCs : size-" + ptnSncs==null?0:ptnSncs.length);
 		if (snclist != null) {
 			for (SubnetworkConnection_T snc : snclist) {
 				try {
@@ -634,6 +642,7 @@ public class AluService implements NbiService {
 
 	@Override
 	public void retrieveRouteAndTopologicalLinks(String sncName, List<CrossConnect> ccList, List<Section> sectionList) {
+		sbilog.info(sncName + " retrieveRouteAndTopologicalLinks start...");
 		subnetworkConnection.Route_THolder normalRoute = new subnetworkConnection.Route_THolder();
 		topologicalLink.TopologicalLinkList_THolder topologicalLinkList = new topologicalLink.TopologicalLinkList_THolder();
 		NameAndStringValue_T[] vendorSncName = VendorDNFactory.createCommonDN(sncName);
