@@ -100,7 +100,7 @@ public class DayMigrationJob4SDH  extends MigrateCommonJob implements CommandBea
             Vector<BObject> ttVector = ttTask.excute();
             sqliteConn.waitingForInsertBObject();
 
-            nbilog.info("SNCAndCCAndSectionDataTask: ");
+            nbilog.info("SNCAndCCAndSectionDataTask: " + ttVector.size());
             TaskPoolExecutor executor2 = new TaskPoolExecutor(1);
             if (emstype.contains(EMS_TYPE_PTN)) {
                 for (BObject snc : ttVector) {

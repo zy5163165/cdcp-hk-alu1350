@@ -644,7 +644,7 @@ public class AluService implements NbiService {
 	public void retrieveRouteAndTopologicalLinks(String sncName, List<CrossConnect> ccList, List<Section> sectionList) {
 		sbilog.info(sncName + " retrieveRouteAndTopologicalLinks start...");
 		subnetworkConnection.Route_THolder normalRoute = new subnetworkConnection.Route_THolder();
-		topologicalLink.TopologicalLinkList_THolder topologicalLinkList = new topologicalLink.TopologicalLinkList_THolder();
+//		topologicalLink.TopologicalLinkList_THolder topologicalLinkList = new topologicalLink.TopologicalLinkList_THolder();
 		NameAndStringValue_T[] vendorSncName = VendorDNFactory.createCommonDN(sncName);
 		try {
 //			corbaService.getNmsSession().getMultiLayerSubnetworkMgr().getRouteAndTopologicalLinks(vendorSncName, normalRoute, topologicalLinkList);
@@ -662,13 +662,13 @@ public class AluService implements NbiService {
 			}
 		}
 
-		for (topologicalLink.TopologicalLink_T section : topologicalLinkList.value) {
-			try {
-				sectionList.add(SectionMapper.instance().convertSection(section));
-			} catch (Exception e) {
-				errorlog.error("retrieveRouteAndTopologicalLinks convertException: ", e);
-			}
-		}
+//		for (topologicalLink.TopologicalLink_T section : topologicalLinkList.value) {
+//			try {
+//				sectionList.add(SectionMapper.instance().convertSection(section));
+//			} catch (Exception e) {
+//				errorlog.error("retrieveRouteAndTopologicalLinks convertException: ", e);
+//			}
+//		}
 		sbilog.info(sncName + " retrieveRouteAndTopologicalLinks ccList: " + ccList.size());
 		sbilog.info(sncName + " retrieveRouteAndTopologicalLinks sectionList: " + sectionList.size());
 
